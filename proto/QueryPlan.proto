@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+import "WorkItem.proto";
+
+message QueryPlan {
+  optional uint32 planid = 1;
+  repeated WorkItem planitems = 2;
+}

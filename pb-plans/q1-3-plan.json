@@ -1,0 +1,138 @@
+{
+    "node_type": "Aggregate",
+    "operator": null,
+    "children": [
+        {
+            "node_type": "Nested Loop",
+            "operator": "NLJ",
+            "children": [
+                {
+                    "node_type": "Seq Scan",
+                    "operator": "Seq. Scan",
+                    "children": [],
+                    "plan_params": {
+                        "base_table": {
+                            "full_name": "dim_date",
+                            "alias": "",
+                            "virtual": false,
+                            "schema": ""
+                        },
+                        "filter_predicate": null,
+                        "sort_keys": [],
+                        "parallel_workers": 0,
+                        "index": "",
+                        "lookup_key": null,
+                        "subplan_name": null
+                    },
+                    "estimates": {
+                        "cardinality": 7.0,
+                        "cost": 79.34
+                    },
+                    "measures": {
+                        "cardinality": NaN,
+                        "execution_time": NaN,
+                        "cache_hits": null,
+                        "cache_misses": null
+                    },
+                    "subplan": null
+                },
+                {
+                    "node_type": "Bitmap Heap Scan",
+                    "operator": "Bitmap Scan",
+                    "children": [
+                        {
+                            "node_type": "Bitmap Index Scan",
+                            "operator": null,
+                            "children": [],
+                            "plan_params": {
+                                "base_table": null,
+                                "filter_predicate": null,
+                                "sort_keys": [],
+                                "parallel_workers": 0,
+                                "index": "date_lo_orderdate",
+                                "lookup_key": null,
+                                "subplan_name": null
+                            },
+                            "estimates": {
+                                "cardinality": 2494.0,
+                                "cost": 31.14
+                            },
+                            "measures": {
+                                "cardinality": NaN,
+                                "execution_time": NaN,
+                                "cache_hits": null,
+                                "cache_misses": null
+                            },
+                            "subplan": null
+                        }
+                    ],
+                    "plan_params": {
+                        "base_table": {
+                            "full_name": "lineorder",
+                            "alias": "",
+                            "virtual": false,
+                            "schema": ""
+                        },
+                        "filter_predicate": null,
+                        "sort_keys": [],
+                        "parallel_workers": 0,
+                        "index": "",
+                        "lookup_key": null,
+                        "subplan_name": null
+                    },
+                    "estimates": {
+                        "cardinality": 132.0,
+                        "cost": 7928.17
+                    },
+                    "measures": {
+                        "cardinality": NaN,
+                        "execution_time": NaN,
+                        "cache_hits": null,
+                        "cache_misses": null
+                    },
+                    "subplan": null
+                }
+            ],
+            "plan_params": {
+                "base_table": null,
+                "filter_predicate": null,
+                "sort_keys": [],
+                "parallel_workers": 0,
+                "index": "",
+                "lookup_key": null,
+                "subplan_name": null
+            },
+            "estimates": {
+                "cardinality": 868.0,
+                "cost": 55585.8
+            },
+            "measures": {
+                "cardinality": NaN,
+                "execution_time": NaN,
+                "cache_hits": null,
+                "cache_misses": null
+            },
+            "subplan": null
+        }
+    ],
+    "plan_params": {
+        "base_table": null,
+        "filter_predicate": null,
+        "sort_keys": [],
+        "parallel_workers": 0,
+        "index": "",
+        "lookup_key": null,
+        "subplan_name": null
+    },
+    "estimates": {
+        "cardinality": 1.0,
+        "cost": 55590.15
+    },
+    "measures": {
+        "cardinality": NaN,
+        "execution_time": NaN,
+        "cache_hits": null,
+        "cache_misses": null
+    },
+    "subplan": null
+}

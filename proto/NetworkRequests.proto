@@ -1,0 +1,35 @@
+syntax = "proto2";
+
+package ddd.network;
+
+enum ActionType {
+  ACT_CONNECT = 0;
+  ACT_DISCONNECT = 1;
+}
+
+enum ConnectionType {
+  CONNECT_TCP = 0;
+  CONNECT_RDMA = 1;
+}
+
+message ConnectItem {
+  required string destinationIp = 1;
+  required uint32 port = 2;
+  required ActionType action = 3;
+  required ConnectionType connectionType = 4;
+}
+
+message ConnectInfo {
+  required ConnectItem original_request = 1;
+  required bool success = 2;
+}
+
+message UuidForUnitRequest {
+  required uint32 requestedUnitType = 1;
+}
+
+message UuidForUnitResponse {
+  required uint32 requestedUnitType = 1;
+  repeated uint64 uuids = 2;
+  repeated string names = 3;
+}

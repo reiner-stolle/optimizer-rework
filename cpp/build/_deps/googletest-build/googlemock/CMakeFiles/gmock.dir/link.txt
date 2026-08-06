@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g -shared -Wl,-soname,libgmock.so.1.17.0 -o ../../../lib/libgmock.so.1.17.0 "CMakeFiles/gmock.dir/src/gmock-all.cc.o"  -Wl,-rpath,/home/stolle/ws25-optimizer-cpp/cpp/build/lib: ../../../lib/libgtest.so.1.17.0 

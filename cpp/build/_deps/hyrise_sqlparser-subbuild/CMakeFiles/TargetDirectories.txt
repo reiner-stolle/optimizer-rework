@@ -1,0 +1,3 @@
+/home/stolle/ws25-optimizer-cpp/cpp/build/_deps/hyrise_sqlparser-subbuild/CMakeFiles/hyrise_sqlparser-populate.dir
+/home/stolle/ws25-optimizer-cpp/cpp/build/_deps/hyrise_sqlparser-subbuild/CMakeFiles/edit_cache.dir
+/home/stolle/ws25-optimizer-cpp/cpp/build/_deps/hyrise_sqlparser-subbuild/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,5 @@
+if(EXISTS "/home/stolle/ws25-optimizer-cpp/cpp/build/optimizer-tests[1]_tests.cmake")
+  include("/home/stolle/ws25-optimizer-cpp/cpp/build/optimizer-tests[1]_tests.cmake")
+else()
+  add_test(optimizer-tests_NOT_BUILT optimizer-tests_NOT_BUILT)
+endif()

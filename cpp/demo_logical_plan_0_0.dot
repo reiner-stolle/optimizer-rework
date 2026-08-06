@@ -1,0 +1,8 @@
+digraph LogicalPlan {
+  rankdir=TB;
+  node [fontname="Helvetica"];
+  edge [fontname="Helvetica" , dir=back];
+  0 [label=<<b>PROJECTION</b><br/>Cols: lineorder.lo_extendprice>, shape=box, style=filled, fillcolor=lightblue];
+  1 [label=<<b>SCAN</b><br/>Table: lineorder>, shape=box, style=filled, fillcolor=lightblue];
+  0 -> 1 [label="", fontsize=10, fontcolor="darkgreen"];
+}

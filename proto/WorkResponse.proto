@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+message WorkResponse {
+  optional uint32 planId = 1;
+  optional uint32 itemId = 2;
+  optional string info = 3;
+  optional bool success = 4;
+}

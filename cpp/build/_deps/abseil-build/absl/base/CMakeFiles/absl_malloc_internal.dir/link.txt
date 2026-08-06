@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g -shared -Wl,-soname,libabsl_malloc_internal.so -o ../../../../lib/libabsl_malloc_internal.so CMakeFiles/absl_malloc_internal.dir/internal/low_level_alloc.cc.o  -Wl,-rpath,"\$ORIGIN" ../../../../lib/libabsl_base.so ../../../../lib/libabsl_raw_logging_internal.so ../../../../lib/libabsl_log_severity.so ../../../../lib/libabsl_spinlock_wait.so 

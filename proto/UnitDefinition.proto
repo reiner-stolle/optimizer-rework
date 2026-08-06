@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+message UnitDefinition {
+  optional uint32 unit_type = 1 [default = 0];
+  optional string info = 2;
+  optional string prettyName = 3;
+}

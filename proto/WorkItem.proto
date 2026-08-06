@@ -1,0 +1,201 @@
+syntax = "proto2";
+
+enum ColumnType {
+  TYPE_INTEGER = 0;
+  TYPE_FLOAT = 1;
+  TYPE_STRING = 2;
+  TYPE_BITMASK = 3;
+  TYPE_POSLIST = 4;
+  TYPE_PAIR_POSLIST = 5;
+}
+
+enum CompType {
+  COMP_LT = 0;
+  COMP_LE = 1;
+  COMP_EQ = 2;
+  COMP_GE = 3;
+  COMP_GT = 4;
+  COMP_NE = 5;
+  COMP_BETWEEN = 6;
+  COMP_IN = 7;
+  COMP_LIKE = 8;
+}
+
+enum OperatorType {
+  OP_FILTER = 1;
+  OP_IDXSCAN = 2;
+  OP_NLJ = 3;
+  OP_HASHJOIN = 4;
+  OP_MERGEJOIN = 5;
+  OP_AGGREGATE = 6;
+  OP_SETOPERATION = 7;  // Intermediate encodes arbitrary relational operators (e.g. unions or mappings)
+  OP_SORT = 8;
+  OP_MAP = 9;
+  OP_MATERIALIZE = 10; // Takes  bitmask/position list and a column --> produces a column whose entries match the positions
+  OP_GROUPBY = 11;
+  OP_RESULT = 12;
+}
+
+enum StringOperation {
+  STR_LOWER = 1;
+  STR_UPPER = 2;
+}
+
+enum AggFunc {
+  AGG_COUNT = 1;
+  AGG_SUM = 2;
+  AGG_MIN = 3;
+  AGG_MAX = 4;
+  AGG_AVG = 5;
+}
+
+enum RelOp {
+  REL_UNION = 1;
+  REL_INTERSECTION = 2;
+  REL_NEGATION = 3;
+}
+
+enum ArithOp {
+  ARITH_ADD = 1;
+  ARITH_SUB = 2;
+  ARITH_MUL = 3;
+  ARITH_DIV = 4;
+  ARITH_MOD = 5;
+}
+
+enum SIMDISE {
+  SIMD_DEFAULT = 1;
+  SIMD_SCALAR = 2;
+  SIMD_SSE = 3;
+  SIMD_AVX2 = 4;
+  SIMD_AVX512 = 5;
+  SIMD_ARMNEON = 6;
+  SIMD_ARMSVE = 7;
+}
+
+message IntValue {
+  optional uint64 value = 1;
+}
+
+message FloatValue {
+  optional double value = 1;
+}
+
+message StringValue {
+  optional string value = 1;
+}
+
+message ScalarValue {
+  oneof value {
+      IntValue intVal = 1;
+      FloatValue floatVal = 2;
+      StringValue stringVal = 3;
+    }
+}
+
+message ColumnMessage {
+  optional string tabName = 1;
+  optional string colName = 2;
+  optional ColumnType colType = 3;
+  optional bool isBase = 4 [default = false];
+}
+
+message FilterItem {
+  optional ColumnMessage inputColumn = 1;
+  optional ColumnMessage outputColumn = 2;
+  optional CompType filterType = 3;
+  repeated ScalarValue filterValue = 4;
+  repeated StringOperation stringOp = 5;
+  optional ColumnMessage compareColumn = 6;  // For column-vs-column comparisons (e.g. post-join filters like ci.movie_id = mc.movie_id)
+}
+
+message MultiGroupItem {
+  repeated ColumnMessage groupColumns = 1; // The columns are expected to be in the correct order
+  optional ColumnMessage outputIndex = 2;
+  optional ColumnMessage outputClusters = 3;
+  optional ColumnMessage aggregationColumn = 4; // If we should do a SUM-aggregation with these clusters
+  optional ColumnMessage aggregationResultColumn = 5; 
+  optional bool storeExtends = 6 [default = false];
+  repeated bool sortOrders = 7; // true == Ascending, false == Descending
+}
+
+message JoinItem {
+  optional ColumnMessage innerColumn = 1;
+  optional ColumnMessage outerColumn = 2;
+  optional ColumnMessage outputColumn = 3;
+  optional CompType joinPredicate = 9;
+  optional bool produceInnerOutput = 10 [default = true];
+  optional bool produceOuterOutput = 11 [default = true];
+}
+
+message AggItem {
+  optional ColumnMessage inputColumn = 1;
+  optional ColumnMessage outputColumn = 2;
+  optional AggFunc aggFunc = 3;
+  repeated string groupColumns = 4;
+}
+
+message SortItem {
+  repeated ColumnMessage inputColumns = 1;  // the i-th entry in sortColumns corresponds to the i-th entry in sortOrder
+  repeated bool sortOrder = 2;              // true indicates ascending, false descending order
+  optional ColumnMessage indexOutput = 3;   // The name of the manifested output index
+  optional ColumnMessage existingIndex = 4; // If an existing index is provided, sort it and not the columns
+}
+
+message MapItem {
+  optional ColumnMessage inputColumn = 1;
+  optional ColumnMessage outputColumn = 2;
+  optional ArithOp operatorType = 3;
+  oneof partnerVal {
+    ColumnMessage partnerColumn = 4;
+    ScalarValue staticVal = 5;
+  }
+}
+
+message MaterializeItem {
+  optional ColumnMessage indexColumn = 1;
+  optional ColumnMessage filterColumn = 2;
+  optional ColumnMessage outputColumn = 3;
+}
+
+message SetOperationItem {
+  optional RelOp operation = 1;
+  optional ColumnMessage innerColumn = 2;
+  optional ColumnMessage outerColumn = 3;
+  optional ColumnMessage outputColumn = 4;
+}
+
+message FetchItem {
+  required ColumnMessage inputColumn = 1;
+  required bool printToFile = 2;
+}
+
+message ResultItem {
+  required string filename = 1;
+  repeated ColumnMessage resultColumns = 2;
+  repeated string resultHeader = 3;
+  optional ColumnMessage resultIndex = 4;
+  optional uint32 limitCount = 5;
+  optional uint32 offsetCount = 6 [default = 0];
+}
+
+message WorkItem {
+  optional uint32 planId = 1;
+  optional uint32 itemId = 2;
+  optional OperatorType operatorId = 3;
+  optional bool printDebug = 4;
+  optional SIMDISE simdExt = 5 [default = SIMD_DEFAULT];
+  oneof opData {
+    FilterItem filterData = 6;
+    JoinItem joinData = 7;
+    AggItem aggData = 8;
+    SortItem sortData = 9;
+    MapItem mapData = 10;
+    MaterializeItem materializeData = 11;
+    SetOperationItem setData = 12;
+    FetchItem fetchData = 13;
+    MultiGroupItem multiGroupData = 14;
+    ResultItem resultData = 15;
+  }
+  repeated uint32 dependsOn = 16;
+}

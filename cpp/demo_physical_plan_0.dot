@@ -1,0 +1,8 @@
+digraph PhysicalPlan {
+  rankdir=TB;
+  node [fontname="Helvetica"];
+  edge [fontname="Helvetica", dir=back];
+  0 [label=<<b>RESULT :: 376014</b><br/><font color='darkblue' point-size='10'>In: lineorder.lo_extendprice AS lo_extendprice</font>>, shape=box, style=filled, fillcolor=lightyellow];
+  1 [label="lineorder.lo_extendprice", shape=ellipse, style=filled, fillcolor=lightblue, fontsize=10];
+  0 -> 1 [style=dashed, color="gray50", fontsize=9];
+}

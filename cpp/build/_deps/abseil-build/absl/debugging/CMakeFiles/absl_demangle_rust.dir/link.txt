@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g -shared -Wl,-soname,libabsl_demangle_rust.so -o ../../../../lib/libabsl_demangle_rust.so CMakeFiles/absl_demangle_rust.dir/internal/demangle_rust.cc.o  -Wl,-rpath,"\$ORIGIN" ../../../../lib/libabsl_decode_rust_punycode.so ../../../../lib/libabsl_utf8_for_code_point.so 

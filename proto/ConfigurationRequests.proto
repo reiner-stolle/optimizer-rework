@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package ddd.config;
+
+enum ConfigType {
+  SET_WORKER = 1;
+  RESET_CATALOG = 2;
+}
+
+message ConfigurationItem {
+  required ConfigType type = 1;
+  optional uint64 worker_count = 2;
+}

@@ -1,0 +1,33 @@
+syntax = "proto2";
+
+package ddd.testing;
+
+enum BenchmarkAction {
+  DATA_CREATE = 0;
+  DATA_DELETE = 1;
+  IDLE_TASK = 3;
+}
+
+enum DataType {
+  int8 = 0;
+  uint8 = 1;
+  int16 = 2;
+  uint16 = 3;
+  int32 = 4;
+  uint32 = 5;
+  int64 = 6;
+  uint64 = 7;
+  f32 = 8;
+  f64 = 9;
+}
+
+message TestDataSetup {
+  optional uint32 itemid = 1;
+  optional BenchmarkAction action = 2;
+  optional uint64 elementCount = 3;
+  optional DataType dataType = 4;
+  optional uint64 randomSeed = 5;
+  optional string tableName = 6;
+  optional string columnName = 7;
+  optional string tableIdentifier = 8;
+}

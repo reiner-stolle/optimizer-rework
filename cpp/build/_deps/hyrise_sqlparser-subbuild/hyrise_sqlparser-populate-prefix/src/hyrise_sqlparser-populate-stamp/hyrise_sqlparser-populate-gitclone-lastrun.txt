@@ -1,0 +1,15 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=git
+command=/usr/local/bin/cmake;-P;/home/stolle/ws25-optimizer-cpp/cpp/build/_deps/hyrise_sqlparser-subbuild/hyrise_sqlparser-populate-prefix/tmp/hyrise_sqlparser-populate-gitclone.cmake
+source_dir=/home/stolle/ws25-optimizer-cpp/cpp/build/_deps/hyrise_sqlparser-src
+work_dir=/home/stolle/ws25-optimizer-cpp/cpp/build/_deps
+repository=https://github.com/hyrise/sql-parser.git
+remote=origin
+init_submodules=TRUE
+recurse_submodules=--recursive
+submodules=
+CMP0097=NEW
+

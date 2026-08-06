@@ -1,0 +1,354 @@
+{
+    "node_type": "Incremental Sort",
+    "operator": null,
+    "children": [
+        {
+            "node_type": "Aggregate",
+            "operator": null,
+            "children": [
+                {
+                    "node_type": "Gather Merge",
+                    "operator": null,
+                    "children": [
+                        {
+                            "node_type": "Sort",
+                            "operator": "Sort",
+                            "children": [
+                                {
+                                    "node_type": "Nested Loop",
+                                    "operator": "NLJ",
+                                    "children": [
+                                        {
+                                            "node_type": "Hash Join",
+                                            "operator": "Hash Join",
+                                            "children": [
+                                                {
+                                                    "node_type": "Hash Join",
+                                                    "operator": "Hash Join",
+                                                    "children": [
+                                                        {
+                                                            "node_type": "Seq Scan",
+                                                            "operator": "Seq. Scan",
+                                                            "children": [],
+                                                            "plan_params": {
+                                                                "base_table": {
+                                                                    "full_name": "lineorder",
+                                                                    "alias": "",
+                                                                    "virtual": false,
+                                                                    "schema": ""
+                                                                },
+                                                                "filter_predicate": null,
+                                                                "sort_keys": [],
+                                                                "parallel_workers": 0,
+                                                                "index": "",
+                                                                "lookup_key": null,
+                                                                "subplan_name": null
+                                                            },
+                                                            "estimates": {
+                                                                "cardinality": 2500233.0,
+                                                                "cost": 103482.33
+                                                            },
+                                                            "measures": {
+                                                                "cardinality": NaN,
+                                                                "execution_time": NaN,
+                                                                "cache_hits": null,
+                                                                "cache_misses": null
+                                                            },
+                                                            "subplan": null
+                                                        },
+                                                        {
+                                                            "node_type": "Hash",
+                                                            "operator": null,
+                                                            "children": [
+                                                                {
+                                                                    "node_type": "Seq Scan",
+                                                                    "operator": "Seq. Scan",
+                                                                    "children": [],
+                                                                    "plan_params": {
+                                                                        "base_table": {
+                                                                            "full_name": "customer",
+                                                                            "alias": "",
+                                                                            "virtual": false,
+                                                                            "schema": ""
+                                                                        },
+                                                                        "filter_predicate": null,
+                                                                        "sort_keys": [],
+                                                                        "parallel_workers": 0,
+                                                                        "index": "",
+                                                                        "lookup_key": null,
+                                                                        "subplan_name": null
+                                                                    },
+                                                                    "estimates": {
+                                                                        "cardinality": 258.0,
+                                                                        "cost": 922.0
+                                                                    },
+                                                                    "measures": {
+                                                                        "cardinality": NaN,
+                                                                        "execution_time": NaN,
+                                                                        "cache_hits": null,
+                                                                        "cache_misses": null
+                                                                    },
+                                                                    "subplan": null
+                                                                }
+                                                            ],
+                                                            "plan_params": {
+                                                                "base_table": null,
+                                                                "filter_predicate": null,
+                                                                "sort_keys": [],
+                                                                "parallel_workers": 0,
+                                                                "index": "",
+                                                                "lookup_key": null,
+                                                                "subplan_name": null
+                                                            },
+                                                            "estimates": {
+                                                                "cardinality": 258.0,
+                                                                "cost": 922.0
+                                                            },
+                                                            "measures": {
+                                                                "cardinality": NaN,
+                                                                "execution_time": NaN,
+                                                                "cache_hits": null,
+                                                                "cache_misses": null
+                                                            },
+                                                            "subplan": null
+                                                        }
+                                                    ],
+                                                    "plan_params": {
+                                                        "base_table": null,
+                                                        "filter_predicate": null,
+                                                        "sort_keys": [],
+                                                        "parallel_workers": 0,
+                                                        "index": "",
+                                                        "lookup_key": null,
+                                                        "subplan_name": null
+                                                    },
+                                                    "estimates": {
+                                                        "cardinality": 21502.0,
+                                                        "cost": 110971.59
+                                                    },
+                                                    "measures": {
+                                                        "cardinality": NaN,
+                                                        "execution_time": NaN,
+                                                        "cache_hits": null,
+                                                        "cache_misses": null
+                                                    },
+                                                    "subplan": null
+                                                },
+                                                {
+                                                    "node_type": "Hash",
+                                                    "operator": null,
+                                                    "children": [
+                                                        {
+                                                            "node_type": "Seq Scan",
+                                                            "operator": "Seq. Scan",
+                                                            "children": [],
+                                                            "plan_params": {
+                                                                "base_table": {
+                                                                    "full_name": "supplier",
+                                                                    "alias": "",
+                                                                    "virtual": false,
+                                                                    "schema": ""
+                                                                },
+                                                                "filter_predicate": null,
+                                                                "sort_keys": [],
+                                                                "parallel_workers": 0,
+                                                                "index": "",
+                                                                "lookup_key": null,
+                                                                "subplan_name": null
+                                                            },
+                                                            "estimates": {
+                                                                "cardinality": 19.0,
+                                                                "cost": 58.0
+                                                            },
+                                                            "measures": {
+                                                                "cardinality": NaN,
+                                                                "execution_time": NaN,
+                                                                "cache_hits": null,
+                                                                "cache_misses": null
+                                                            },
+                                                            "subplan": null
+                                                        }
+                                                    ],
+                                                    "plan_params": {
+                                                        "base_table": null,
+                                                        "filter_predicate": null,
+                                                        "sort_keys": [],
+                                                        "parallel_workers": 0,
+                                                        "index": "",
+                                                        "lookup_key": null,
+                                                        "subplan_name": null
+                                                    },
+                                                    "estimates": {
+                                                        "cardinality": 19.0,
+                                                        "cost": 58.0
+                                                    },
+                                                    "measures": {
+                                                        "cardinality": NaN,
+                                                        "execution_time": NaN,
+                                                        "cache_hits": null,
+                                                        "cache_misses": null
+                                                    },
+                                                    "subplan": null
+                                                }
+                                            ],
+                                            "plan_params": {
+                                                "base_table": null,
+                                                "filter_predicate": null,
+                                                "sort_keys": [],
+                                                "parallel_workers": 0,
+                                                "index": "",
+                                                "lookup_key": null,
+                                                "subplan_name": null
+                                            },
+                                            "estimates": {
+                                                "cardinality": 204.0,
+                                                "cost": 111086.4
+                                            },
+                                            "measures": {
+                                                "cardinality": NaN,
+                                                "execution_time": NaN,
+                                                "cache_hits": null,
+                                                "cache_misses": null
+                                            },
+                                            "subplan": null
+                                        },
+                                        {
+                                            "node_type": "Index Scan",
+                                            "operator": "Idx. Scan",
+                                            "children": [],
+                                            "plan_params": {
+                                                "base_table": {
+                                                    "full_name": "dim_date",
+                                                    "alias": "",
+                                                    "virtual": false,
+                                                    "schema": ""
+                                                },
+                                                "filter_predicate": null,
+                                                "sort_keys": [],
+                                                "parallel_workers": 0,
+                                                "index": "dim_date_pkey",
+                                                "lookup_key": null,
+                                                "subplan_name": null
+                                            },
+                                            "estimates": {
+                                                "cardinality": 1.0,
+                                                "cost": 0.3
+                                            },
+                                            "measures": {
+                                                "cardinality": NaN,
+                                                "execution_time": NaN,
+                                                "cache_hits": null,
+                                                "cache_misses": null
+                                            },
+                                            "subplan": null
+                                        }
+                                    ],
+                                    "plan_params": {
+                                        "base_table": null,
+                                        "filter_predicate": null,
+                                        "sort_keys": [],
+                                        "parallel_workers": 0,
+                                        "index": "",
+                                        "lookup_key": null,
+                                        "subplan_name": null
+                                    },
+                                    "estimates": {
+                                        "cardinality": 175.0,
+                                        "cost": 111148.11
+                                    },
+                                    "measures": {
+                                        "cardinality": NaN,
+                                        "execution_time": NaN,
+                                        "cache_hits": null,
+                                        "cache_misses": null
+                                    },
+                                    "subplan": null
+                                }
+                            ],
+                            "plan_params": {
+                                "base_table": null,
+                                "filter_predicate": null,
+                                "sort_keys": [],
+                                "parallel_workers": 0,
+                                "index": "",
+                                "lookup_key": null,
+                                "subplan_name": null
+                            },
+                            "estimates": {
+                                "cardinality": 175.0,
+                                "cost": 111155.07
+                            },
+                            "measures": {
+                                "cardinality": NaN,
+                                "execution_time": NaN,
+                                "cache_hits": null,
+                                "cache_misses": null
+                            },
+                            "subplan": null
+                        }
+                    ],
+                    "plan_params": {
+                        "base_table": null,
+                        "filter_predicate": null,
+                        "sort_keys": [],
+                        "parallel_workers": 2,
+                        "index": "",
+                        "lookup_key": null,
+                        "subplan_name": null
+                    },
+                    "estimates": {
+                        "cardinality": 420.0,
+                        "cost": 112203.57
+                    },
+                    "measures": {
+                        "cardinality": NaN,
+                        "execution_time": NaN,
+                        "cache_hits": null,
+                        "cache_misses": null
+                    },
+                    "subplan": null
+                }
+            ],
+            "plan_params": {
+                "base_table": null,
+                "filter_predicate": null,
+                "sort_keys": [],
+                "parallel_workers": 0,
+                "index": "",
+                "lookup_key": null,
+                "subplan_name": null
+            },
+            "estimates": {
+                "cardinality": 420.0,
+                "cost": 112211.97
+            },
+            "measures": {
+                "cardinality": NaN,
+                "execution_time": NaN,
+                "cache_hits": null,
+                "cache_misses": null
+            },
+            "subplan": null
+        }
+    ],
+    "plan_params": {
+        "base_table": null,
+        "filter_predicate": null,
+        "sort_keys": [],
+        "parallel_workers": 0,
+        "index": "",
+        "lookup_key": null,
+        "subplan_name": null
+    },
+    "estimates": {
+        "cardinality": 420.0,
+        "cost": 112229.77
+    },
+    "measures": {
+        "cardinality": NaN,
+        "execution_time": NaN,
+        "cache_hits": null,
+        "cache_misses": null
+    },
+    "subplan": null
+}
