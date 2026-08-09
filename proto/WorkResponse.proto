@@ -5,4 +5,19 @@ message WorkResponse {
   optional uint32 itemId = 2;
   optional string info = 3;
   optional bool success = 4;
+  optional ExtendedResult extendedResult = 5;
+}
+
+message ExtendedResult {
+  optional uint32 itemId = 1;
+  optional uint64 start = 2;
+  optional uint64 end = 3;
+  optional uint64 rowCount = 4;
+}
+
+message PlanResponse {
+  optional uint32 planId = 1;
+  optional string info = 2;
+  optional bool success = 3;
+  repeated ExtendedResult extendedResults = 4;
 }

@@ -1,5 +1,38 @@
 syntax = "proto2";
 
+enum TcpPackageType {
+  UNDEFINED_PACKAGE_TYPE = 0;
+  WORK = 1;
+  REROUTE_WORK = 2;
+  TASK_FINISHED = 3;
+  TEXT = 4;
+  UPDATE_UNIT_TYPE = 5;
+  QUERY_PLAN = 6;
+  MONITOR_REQUEST = 7;
+  CONNECT_ACTION = 8;
+  CONNECT_ACTION_INFO = 9;
+  CONFIGURATION_ACTION = 10;
+  UUID_FOR_UNIT_REQUEST = 11; 
+  UUID_FOR_UNIT_RESPONSE = 12;
+  UUID_COLLISION = 13;
+  PLAN_RESPONSE = 14;
+  QUERY_GROUP = 15;
+  SERVER_CONFIGURATION = 16;
+  SERVER_CONFIGURATION_RESPONSE = 17;
+}
+
+// Added Optimizer Unit as enum value 7
+enum UnitType {
+  UNDEFINED_UNIT_TYPE = 0;
+  QUERY_PLANER = 1;
+  COMPUTE_UNIT = 2;
+  MEMORY_UNIT = 3;
+  META_UNIT = 4;
+  MONITOR_UNIT = 5;
+  DATABASE_UNIT = 6;
+  OPTIMIZER_UNIT = 7;
+}
+
 message UnitDefinition {
   optional uint32 unit_type = 1 [default = 0];
   optional string info = 2;

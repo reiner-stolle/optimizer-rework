@@ -1,5 +1,7 @@
 syntax = "proto2";
 
+import "UnitDefinition.proto";
+
 package ddd.network;
 
 enum ActionType {
@@ -10,6 +12,11 @@ enum ActionType {
 enum ConnectionType {
   CONNECT_TCP = 0;
   CONNECT_RDMA = 1;
+}
+
+enum CallbackFunction {
+  FORWARD_CB = 0;
+  QUERY_PLAN_CB = 1;
 }
 
 message ConnectItem {
@@ -32,4 +39,20 @@ message UuidForUnitResponse {
   required uint32 requestedUnitType = 1;
   repeated uint64 uuids = 2;
   repeated string names = 3;
+}
+
+message CallbackChangeRequest {
+  required TcpPackageType packageType = 1;
+  required CallbackFunction callbackFunction = 2;
+}
+
+message ServerConfigurationRequest {
+  optional CallbackChangeRequest callbackChange = 1;
+  optional uint64 windowSizeMs = 2; // The new windowSize for the grouping (if used) in milliseconds
+  optional uint64 threshold = 3;  // Threshold how often a column must be used in the group to be transferred --> currently static threshold but will be adapted into more complex cost function in the future
+  optional float maxOverhead = 4; // Used for the grouping algorithm --> 1.5 would mean a plan is integrated in adds at max 50% columns to the group
+}
+
+message ServerConfigurationResponse {
+  required bool success = 1;
 }

@@ -1,13 +1,15 @@
 syntax = "proto2";
 
+import "TestAndBenchmark.proto";
 import "QueryPlan.proto";
 import "WorkItem.proto";
 
 message WorkRequest {
     oneof requestItem {
-        string test = 1;
+        ddd.testing.TestDataSetup testDataSetup = 1;
         QueryPlan queryPlan = 2;
         WorkItem workItem = 3;
+        QueryGroup queryGroup = 4;
     }
 }
 

@@ -6,3 +6,9 @@ message QueryPlan {
   optional uint32 planid = 1;
   repeated WorkItem planitems = 2;
 }
+
+message QueryGroup {
+  required uint64 groupId = 1;
+  repeated WorkItem columnTransfers = 2; //This should always be a DataTransferItem, but due to internal decisions, we need this wrapping into a WorkItem
+  repeated QueryPlan plans = 3;
+}
