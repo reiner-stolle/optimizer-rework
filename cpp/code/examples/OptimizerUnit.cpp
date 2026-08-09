@@ -92,10 +92,10 @@ int main(int argc, char *argv[]) {
     auto updateUnitInfo_cb = [&client, chores](TCPMetaInfo *meta, void *data, size_t len) -> void {
         LOG_INFO("UpdateUnitInfo Callback invoked");
         UnitDefinition unit;
-        unit.set_unit_type(static_cast<uint32_t>(UnitType::OptimizerUnit));
+        unit.set_unit_type(static_cast<uint32_t>(UnitType::OPTIMIZER_UNIT));
 
         TCPMetaInfo info;
-        info.package_type = TCPPackageType::UpdateUnitType;
+        info.package_type = TcpPackageType::UPDATE_UNIT_TYPE;
         info.payload_size = unit.ByteSizeLong();
         info.src_uuid = client.getUuid();
         void *out_mem = malloc(sizeof(TCPMetaInfo) + info.payload_size);
@@ -120,9 +120,9 @@ int main(int argc, char *argv[]) {
         completionTracker.markCompleted(workResponse.planid(), workResponse.itemid());
     };
 
-    client.addCallback(TCPPackageType::UpdateUnitType, updateUnitInfo_cb);
-    client.addCallback(TCPPackageType::Text, text_cb);
-    client.addCallback(TCPPackageType::TaskFinished, finished);
+    client.addCallback(TcpPackageType::UPDATE_UNIT_TYPE, updateUnitInfo_cb);
+    client.addCallback(TcpPackageType::TEXT, text_cb);
+    client.addCallback(TcpPackageType::TASK_FINISHED, finished);
 
     client.start();
     client.waitUntilChannelClosed();

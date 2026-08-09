@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
         response.set_info("Your intermediates are ready!");
 
         TCPMetaInfo info;
-        info.package_type = TCPPackageType::TaskFinished;
+        info.package_type = TcpPackageType::TASK_FINISHED;
         info.payload_size = response.ByteSizeLong();
         void* out_mem = malloc(sizeof(TCPMetaInfo) + info.payload_size);
 
@@ -55,10 +55,10 @@ int main(int argc, char* argv[]) {
     auto updateUnitInfo_cb = [&client](TCPMetaInfo* meta, void* data, size_t len) -> void {
         std::cout << "[UpdateUnitInfo Callback] Invoked." << std::endl;
         UnitDefinition unit;
-        unit.set_unit_type(static_cast<uint32_t>(UnitType::ComputeUnit));
+        unit.set_unit_type(static_cast<uint32_t>(UnitType::COMPUTE_UNIT));
 
         TCPMetaInfo info;
-        info.package_type = TCPPackageType::UpdateUnitType;
+        info.package_type = TcpPackageType::UPDATE_UNIT_TYPE;
         info.payload_size = unit.ByteSizeLong();
         void* out_mem = malloc(sizeof(TCPMetaInfo) + info.payload_size);
 
@@ -73,9 +73,9 @@ int main(int argc, char* argv[]) {
         std::cout << "Text Received: " << str << std::endl;
     };
 
-    client.addCallback(TCPPackageType::Work, work_cb);
-    client.addCallback(TCPPackageType::UpdateUnitType, updateUnitInfo_cb);
-    client.addCallback(TCPPackageType::Text, text_cb);
+    client.addCallback(TcpPackageType::WORK, work_cb);
+    client.addCallback(TcpPackageType::UPDATE_UNIT_TYPE, updateUnitInfo_cb);
+    client.addCallback(TcpPackageType::TEXT, text_cb);
 
     std::string content;
     std::string op;

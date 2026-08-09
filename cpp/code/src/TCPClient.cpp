@@ -23,11 +23,11 @@ TCPClient::TCPClient(std::string ip, int port, bool verbose) : _server_ip(ip), _
         std::cout << "[TCPClient] UUID collision signaled from TCPServer. Creating a new UUID." << std::endl;
         generateSessionUuid();
         TCPMetaInfo info;
-        info.package_type = TCPPackageType::UuidCollision;
+        info.package_type = TcpPackageType::UUID_COLLISION;
         info.src_uuid = getUuid();
         notifyHost(&info, sizeof(TCPMetaInfo));
     };
-    addCallback(TCPPackageType::UuidCollision, update_uuid_on_collision);
+    addCallback(TcpPackageType::UUID_COLLISION, update_uuid_on_collision);
 }
 
 TCPClient::~TCPClient() {
@@ -90,7 +90,7 @@ void TCPClient::notifyHost(void* data, size_t len) {
 
 void TCPClient::textResponse(const std::string text, uint64_t tgt_uuid) {
     TCPMetaInfo info;
-    info.package_type = TCPPackageType::Text;
+    info.package_type = TcpPackageType::TEXT;
     info.payload_size = text.size();
     info.src_uuid = getUuid();
     info.tgt_uuid = tgt_uuid;
@@ -106,7 +106,7 @@ uint64_t TCPClient::getUuid() const {
     return _session_uuid;
 }
 
-void TCPClient::addCallback(TCPPackageType type, ReceiveCallback cb) {
+void TCPClient::addCallback(TcpPackageType type, ReceiveCallback cb) {
     callbacks[type] = cb;
 }
 

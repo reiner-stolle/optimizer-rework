@@ -10,6 +10,11 @@
 #include "WorkItem.pb.h"
 #include "WorkResponse.pb.h"
 
+// Added UnitType
+#include <UnitDefinition.pb.h>
+
+
+// This is where the conflict is coming in
 using namespace tuddbs;
 
 void globalExit(TCPServer& server) {
@@ -33,7 +38,7 @@ int main(int argc, char* argv[]) {
             ClientInfo* target = server.getClientByUuid(meta->tgt_uuid);
             if (target) {
                 TCPMetaInfo message_info;
-                message_info.package_type = TCPPackageType::Text;
+                message_info.package_type = TcpPackageType::TEXT;
                 message_info.payload_size = len;
                 message_info.src_uuid = meta->src_uuid;
                 message_info.tgt_uuid = meta->tgt_uuid;
@@ -47,7 +52,7 @@ int main(int argc, char* argv[]) {
                 std::cout << "-- Pacakge type: " << TCPServer::packageTypeToString(message_info.package_type) << std::endl;
                 std::cout << "-- message_size: " << message_size << std::endl;
                 server.sendTo(target, reinterpret_cast<const char*>(buf), message_size);
-                server.sendToAllOfType(UnitType::MonitorUnit, reinterpret_cast<const char*>(buf), message_size);
+                server.sendToAllOfType(UnitType::MONITOR_UNIT, reinterpret_cast<const char*>(buf), message_size);
             } else {
                 std::cout << "[TCPServer] ERROR - UUID<" << meta->tgt_uuid << "> not found. Could not send to destination." << std::endl;
             }
@@ -60,15 +65,15 @@ int main(int argc, char* argv[]) {
         const size_t message_size = sizeof(TCPMetaInfo) + len;
         void* buf = malloc(message_size);
         TCPMetaInfo message_info;
-        message_info.package_type = TCPPackageType::RerouteWork;
+        message_info.package_type = TcpPackageType::REROUTE_WORK;
         message_info.payload_size = len;
         message_info.src_uuid = meta->tgt_uuid;
         message_info.tgt_uuid = 0;
         memcpy(buf, &message_info, sizeof(TCPMetaInfo));
         memcpy(reinterpret_cast<char*>(buf) + sizeof(TCPMetaInfo), data, len);
 
-        server.rerouteToAnyOfType(UnitType::ComputeUnit, meta->src_uuid, static_cast<const char*>(buf), message_size);
-        server.sendToAllOfType(UnitType::MonitorUnit, static_cast<const char*>(buf), message_size);
+        server.rerouteToAnyOfType(UnitType::COMPUTE_UNIT, meta->src_uuid, static_cast<const char*>(buf), message_size);
+        server.sendToAllOfType(UnitType::MONITOR_UNIT, static_cast<const char*>(buf), message_size);
     };
 
     auto work_forward_cb = [&server](TCPMetaInfo* meta, void* data, size_t len) -> void {
@@ -76,7 +81,7 @@ int main(int argc, char* argv[]) {
         void* buf = malloc(message_size);
 
         TCPMetaInfo message_info;
-        message_info.package_type = TCPPackageType::Work;
+        message_info.package_type = TcpPackageType::WORK;
         message_info.payload_size = len;
         message_info.src_uuid = meta->src_uuid;
         message_info.tgt_uuid = meta->tgt_uuid;
@@ -85,14 +90,14 @@ int main(int argc, char* argv[]) {
         memcpy(reinterpret_cast<char*>(buf) + sizeof(TCPMetaInfo), data, len);
         if (message_info.tgt_uuid == 0) {
             std::cout << "[Work] Forwarding to _random_ target." << std::endl;
-            server.sendToAnyOfType(UnitType::ComputeUnit, reinterpret_cast<const char*>(buf), message_size);
-            server.sendToAllOfType(UnitType::MonitorUnit, reinterpret_cast<const char*>(buf), message_size);
+            server.sendToAnyOfType(UnitType::COMPUTE_UNIT, reinterpret_cast<const char*>(buf), message_size);
+            server.sendToAllOfType(UnitType::MONITOR_UNIT, reinterpret_cast<const char*>(buf), message_size);
         } else {
             std::cout << "[Work] Forwarding to _specific_ target." << std::endl;
             ClientInfo* target = server.getClientByUuid(meta->tgt_uuid);
             if (target) {
                 server.sendTo(target, reinterpret_cast<const char*>(buf), message_size);
-                server.sendToAllOfType(UnitType::MonitorUnit, reinterpret_cast<const char*>(buf), message_size);
+                server.sendToAllOfType(UnitType::MONITOR_UNIT, reinterpret_cast<const char*>(buf), message_size);
             }
         }
         free(buf);
@@ -107,7 +112,7 @@ int main(int argc, char* argv[]) {
             void* buf = malloc(message_size);
 
             TCPMetaInfo message_info;
-            message_info.package_type = TCPPackageType::ConnectAction;
+            message_info.package_type = TcpPackageType::CONNECT_ACTION;
             message_info.payload_size = len;
             message_info.src_uuid = meta->src_uuid;
             message_info.tgt_uuid = meta->tgt_uuid;
@@ -119,7 +124,7 @@ int main(int argc, char* argv[]) {
             std::cout << "-- Pacakge type: " << TCPServer::packageTypeToString(message_info.package_type) << std::endl;
             std::cout << "-- message_size: " << message_size << std::endl;
             server.sendTo(target, reinterpret_cast<const char*>(buf), message_size);
-            server.sendToAllOfType(UnitType::MonitorUnit, reinterpret_cast<const char*>(buf), message_size);
+            server.sendToAllOfType(UnitType::MONITOR_UNIT, reinterpret_cast<const char*>(buf), message_size);
             free(buf);
         } else {
             std::cout << "[TCPServer] ERROR - UUID<" << meta->tgt_uuid << "> not found. Could not send to destination." << std::endl;
@@ -136,7 +141,7 @@ int main(int argc, char* argv[]) {
             void* buf = malloc(message_size);
 
             TCPMetaInfo message_info;
-            message_info.package_type = TCPPackageType::ConfigurationAction;
+            message_info.package_type = TcpPackageType::CONFIGURATION_ACTION;
             message_info.payload_size = len;
             message_info.src_uuid = meta->src_uuid;
             message_info.tgt_uuid = meta->tgt_uuid;
@@ -148,7 +153,7 @@ int main(int argc, char* argv[]) {
             std::cout << "-- Pacakge type: " << TCPServer::packageTypeToString(message_info.package_type) << std::endl;
             std::cout << "-- message_size: " << message_size << std::endl;
             server.sendTo(target, reinterpret_cast<const char*>(buf), message_size);
-            server.sendToAllOfType(UnitType::MonitorUnit, reinterpret_cast<const char*>(buf), message_size);
+            server.sendToAllOfType(UnitType::MONITOR_UNIT, reinterpret_cast<const char*>(buf), message_size);
             free(buf);
         } else {
             std::cout << "[TCPServer] ERROR - UUID<" << meta->tgt_uuid << "> not found. Could not send to destination." << std::endl;
@@ -165,7 +170,7 @@ int main(int argc, char* argv[]) {
             void* buf = malloc(message_size);
 
             TCPMetaInfo message_info;
-            message_info.package_type = TCPPackageType::ConnectActionInfo;
+            message_info.package_type = TcpPackageType::CONNECT_ACTION_INFO;
             message_info.payload_size = len;
             message_info.src_uuid = meta->src_uuid;
             message_info.tgt_uuid = meta->tgt_uuid;
@@ -177,7 +182,7 @@ int main(int argc, char* argv[]) {
             std::cout << "-- Pacakge type: " << TCPServer::packageTypeToString(message_info.package_type) << std::endl;
             std::cout << "-- message_size: " << message_size << std::endl;
             server.sendTo(target, reinterpret_cast<const char*>(buf), message_size);
-            server.sendToAllOfType(UnitType::MonitorUnit, reinterpret_cast<const char*>(buf), message_size);
+            server.sendToAllOfType(UnitType::MONITOR_UNIT, reinterpret_cast<const char*>(buf), message_size);
             free(buf);
         } else {
             std::cout << "[TCPServer] ERROR - UUID<" << meta->tgt_uuid << "> not found. Could not send to destination." << std::endl;
@@ -193,7 +198,7 @@ int main(int argc, char* argv[]) {
             void* buf = malloc(message_size);
 
             TCPMetaInfo message_info;
-            message_info.package_type = TCPPackageType::TaskFinished;
+            message_info.package_type = TcpPackageType::TASK_FINISHED;
             message_info.payload_size = len;
             message_info.src_uuid = meta->src_uuid;
             message_info.tgt_uuid = meta->tgt_uuid;
@@ -203,7 +208,7 @@ int main(int argc, char* argv[]) {
             std::cout << "-- Pacakge type: " << static_cast<uint64_t>(message_info.package_type) << std::endl;
             std::cout << "-- message_size: " << message_size << std::endl;
             server.sendTo(planner, reinterpret_cast<const char*>(buf), message_size);
-            server.sendToAllOfType(UnitType::MonitorUnit, reinterpret_cast<const char*>(buf), message_size);
+            server.sendToAllOfType(UnitType::MONITOR_UNIT, reinterpret_cast<const char*>(buf), message_size);
             free(buf);
             std::cout << "[TCPServer] Message was forwarded to UUID<" << meta->tgt_uuid << std::endl;
         } else {
@@ -217,7 +222,7 @@ int main(int argc, char* argv[]) {
             const std::string& monitorInfo = server.monitorInfoToString();
 
             TCPMetaInfo message_info;
-            message_info.package_type = TCPPackageType::Text;
+            message_info.package_type = TcpPackageType::TEXT;
             message_info.payload_size = monitorInfo.size();
             message_info.src_uuid = meta->src_uuid;
             message_info.tgt_uuid = meta->tgt_uuid;
@@ -226,7 +231,7 @@ int main(int argc, char* argv[]) {
             memcpy(buf, &message_info, sizeof(TCPMetaInfo));
             memcpy(reinterpret_cast<char*>(buf) + sizeof(TCPMetaInfo), monitorInfo.c_str(), monitorInfo.size());
             server.sendTo(monitor, reinterpret_cast<const char*>(buf), message_info.bytesize());
-            server.sendToAllOfType(UnitType::MonitorUnit, reinterpret_cast<const char*>(buf), message_info.bytesize());
+            server.sendToAllOfType(UnitType::MONITOR_UNIT, reinterpret_cast<const char*>(buf), message_info.bytesize());
             free(buf);
         } else {
             std::cout << "[TCPServer] ERROR - UUID<" << meta->tgt_uuid << "> not found. Could not respond to destination." << std::endl;
@@ -255,7 +260,7 @@ int main(int argc, char* argv[]) {
         response.PrintDebugString();
 
         tuddbs::TCPMetaInfo info;
-        info.package_type = tuddbs::TCPPackageType::UuidForUnitResponse;
+        info.package_type = TcpPackageType::UUID_FOR_UNIT_RESPONSE;
         info.src_uuid = meta->src_uuid;
         info.tgt_uuid = meta->tgt_uuid;
         void* out_mem = malloc(info.bytesize());
@@ -263,23 +268,23 @@ int main(int argc, char* argv[]) {
         ClientInfo* requester = server.getClientByUuid(meta->src_uuid);
         if (requester) {
             server.sendTo(requester, reinterpret_cast<const char*>(out_mem), info.bytesize());
-            server.sendToAllOfType(UnitType::MonitorUnit, reinterpret_cast<const char*>(out_mem), info.bytesize());
+            server.sendToAllOfType(UnitType::MONITOR_UNIT, reinterpret_cast<const char*>(out_mem), info.bytesize());
         } else {
             std::cout << "[TCPServer] ERROR - UUID<" << meta->tgt_uuid << "> not found. Please set your UUID before requesting." << std::endl;
         }
         free(out_mem);
     };
 
-    // server.addCallback(TCPPackageType::TaskFinished, task_finish_cb);
-    server.addCallback(TCPPackageType::Text, text_cb);
-    server.addCallback(TCPPackageType::Work, work_forward_cb);
-    server.addCallback(TCPPackageType::RerouteWork, reroute_work_cb);
-    server.addCallback(TCPPackageType::TaskFinished, finished_forward_cb);
-    server.addCallback(TCPPackageType::MonitorRequest, monitor_cb);
-    server.addCallback(TCPPackageType::ConnectAction, connect_forward_cb);
-    server.addCallback(TCPPackageType::ConnectActionInfo, connect_info_forward_cb);
-    server.addCallback(TCPPackageType::UuidForUnitRequest, uuid_per_client_cb);
-    server.addCallback(TCPPackageType::ConfigurationAction, config_forward_cb);
+    // server.addCallback(TcpPackageTypeTaskFinished, task_finish_cb);
+    server.addCallback(TcpPackageType::TEXT, text_cb);
+    server.addCallback(TcpPackageType::WORK, work_forward_cb);
+    server.addCallback(TcpPackageType::REROUTE_WORK, reroute_work_cb);
+    server.addCallback(TcpPackageType::TASK_FINISHED, finished_forward_cb);
+    server.addCallback(TcpPackageType::MONITOR_REQUEST, monitor_cb);
+    server.addCallback(TcpPackageType::CONNECT_ACTION, connect_forward_cb);
+    server.addCallback(TcpPackageType::CONNECT_ACTION_INFO, connect_info_forward_cb);
+    server.addCallback(TcpPackageType::UUID_FOR_UNIT_REQUEST, uuid_per_client_cb);
+    server.addCallback(TcpPackageType::CONFIGURATION_ACTION, config_forward_cb);
 
     std::string content;
     std::string op;
@@ -318,7 +323,7 @@ int main(int argc, char* argv[]) {
                     case 1: {
                         std::string text = "Hi from the server.";
                         TCPMetaInfo info;
-                        info.package_type = TCPPackageType::Text;
+                        info.package_type = TcpPackageType::TEXT;
                         info.payload_size = text.size();
                         const size_t message_size = sizeof(TCPMetaInfo) + text.size();
                         void* buf = malloc(message_size);
@@ -346,7 +351,7 @@ int main(int argc, char* argv[]) {
 
                         auto serialize = [](void* mem, WorkItem& item, TCPMetaInfo& info) -> size_t {
                             info.payload_size = item.ByteSizeLong();
-                            info.package_type = TCPPackageType::Work;
+                            info.package_type = TcpPackageType::WORK;
                             memcpy(mem, &info, sizeof(TCPMetaInfo));
                             item.SerializeToArray(static_cast<char*>(mem) + sizeof(TCPMetaInfo), item.ByteSizeLong());
                             return item.ByteSizeLong() + sizeof(TCPMetaInfo);
@@ -361,7 +366,7 @@ int main(int argc, char* argv[]) {
 
                         // Send item(s) to clients
                         std::cout << "Total message size: " << message_size << std::endl;
-                        server.sendToAllOfType(UnitType::ComputeUnit, static_cast<const char*>(buf), message_size);
+                        server.sendToAllOfType(UnitType::COMPUTE_UNIT, static_cast<const char*>(buf), message_size);
 
                         free(buf);
                     } break;
@@ -384,7 +389,7 @@ int main(int argc, char* argv[]) {
 
                         void* tmp_buf = buf;
                         TCPMetaInfo message_info;
-                        message_info.package_type = TCPPackageType::Work;
+                        message_info.package_type = TcpPackageType::WORK;
                         for (auto& item : items) {
                             size_t offest = tuddbs::Utility::serializeItemToMemory<WorkItem>(tmp_buf, item, message_info);
                             tmp_buf = static_cast<char*>(tmp_buf) + offest;
@@ -395,7 +400,7 @@ int main(int argc, char* argv[]) {
 
                         const size_t end_first_package = message_size / 3;
                         std::cout << "Sending first message part: " << end_first_package << std::endl;
-                        server.sendToAllOfType(UnitType::ComputeUnit, static_cast<const char*>(buf), end_first_package);
+                        server.sendToAllOfType(UnitType::COMPUTE_UNIT, static_cast<const char*>(buf), end_first_package);
 
                         std::cout << "Waiting 2s..." << std::endl;
                         {
@@ -407,7 +412,7 @@ int main(int argc, char* argv[]) {
 
                         const size_t end_second_package = size_left / 2;
                         std::cout << "Sending second message part: " << end_second_package << std::endl;
-                        server.sendToAllOfType(UnitType::ComputeUnit, static_cast<const char*>(buf) + end_first_package, end_second_package);
+                        server.sendToAllOfType(UnitType::COMPUTE_UNIT, static_cast<const char*>(buf) + end_first_package, end_second_package);
 
                         std::cout << "Waiting 2s..." << std::endl;
                         {
@@ -417,7 +422,7 @@ int main(int argc, char* argv[]) {
 
                         size_left -= end_second_package;
                         std::cout << "Sending last message part: " << size_left << std::endl;
-                        server.sendToAllOfType(UnitType::ComputeUnit, static_cast<const char*>(buf) + end_first_package + end_second_package, size_left);
+                        server.sendToAllOfType(UnitType::COMPUTE_UNIT, static_cast<const char*>(buf) + end_first_package + end_second_package, size_left);
 
                         free(buf);
                     } break;

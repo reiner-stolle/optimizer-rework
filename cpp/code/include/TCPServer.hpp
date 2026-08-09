@@ -9,45 +9,50 @@
 #include <vector>
 #include <string>
 
+#include "UnitDefinition.pb.h"
+
+
 namespace tuddbs {
 static const uint32_t TCP_START_DELIM = 0x5ADB0BB1;
 
 using ClientHandle = int;
 using ServerHandle = int;
 
-enum class TCPPackageType : uint32_t {
-    Undefined = 0,
-    Work,
-    RerouteWork,
-    TaskFinished,
-    Text,
-    UpdateUnitType,
-    QueryPlan,
-    MonitorRequest,
-    ConnectAction,
-    ConnectActionInfo,
-    ConfigurationAction,
-    UuidForUnitRequest,
-    UuidForUnitResponse,
-    UuidCollision
-};
+// enum class TCPPackageType : uint32_t {
+//     Undefined = 0,
+//     Work,
+//     RerouteWork,
+//     TaskFinished,
+//     Text,
+//     UpdateUnitType,
+//     QueryPlan,
+//     MonitorRequest,
+//     ConnectAction,
+//     ConnectActionInfo,
+//     ConfigurationAction,
+//     UuidForUnitRequest,
+//     UuidForUnitResponse,
+//     UuidCollision
+// };
 
-enum class UnitType : uint32_t {
-    Undefined = 0,
-    QueryPlaner,
-    ComputeUnit,
-    MemoryUnit,
-    MetaUnit,
-    MonitorUnit,
-    DatabaseUnit,
-    OptimizerUnit
-};
+// TODO: UnitType
+// enum class UnitType : uint32_t {
+//     Undefined = 0,
+//     QueryPlaner,
+//     ComputeUnit,
+//     MemoryUnit,
+//     MetaUnit,
+//     MonitorUnit,
+//     DatabaseUnit,
+//     OptimizerUnit
+// };
 
 struct TCPMetaInfo {
     uint32_t message_delimiter = TCP_START_DELIM;
-    UnitType unit_type = UnitType::Undefined;
+// TODO: UnitType    
+    UnitType unit_type = UnitType::UNDEFINED_UNIT_TYPE;
     uint32_t payload_size = 0;
-    TCPPackageType package_type = TCPPackageType::Undefined;
+    TcpPackageType package_type = TcpPackageType::UNDEFINED_PACKAGE_TYPE;
     uint64_t src_uuid = 0;
     uint64_t tgt_uuid = 0;
 
@@ -58,7 +63,7 @@ struct ClientInfo {
     ClientHandle handle;
     std::thread* receiver;
     size_t unprocessed_bytes;
-    UnitType type = UnitType::Undefined;
+    UnitType type = UnitType::UNDEFINED_UNIT_TYPE;
     uint64_t uuid;
     std::string prettyName;
     bool abort = false;
@@ -79,7 +84,7 @@ struct ClientInfo {
 };
 
 typedef std::function<void(TCPMetaInfo* meta, void* data, size_t len)> ReceiveCallback;
-typedef std::map<TCPPackageType, ReceiveCallback> CallbackMap;
+typedef std::map<TcpPackageType, ReceiveCallback> CallbackMap;
 
 class TCPServer {
    public:
@@ -110,11 +115,11 @@ class TCPServer {
     void sendToAllOfType(UnitType type, const char* data, uint32_t len);
     void sendToAnyOfType(UnitType type, const char* data, uint32_t len);
     void rerouteToAnyOfType(UnitType type, const uint64_t original_uuid, const char* original_data, uint32_t original_len);
-    void addCallback(TCPPackageType type, ReceiveCallback cb);
+    void addCallback(TcpPackageType type, ReceiveCallback cb);
     void setTimeoutToHandle( ClientHandle handle, const size_t sec, const size_t usec );
 
     static std::string unitTypeToString( UnitType type );
-    static std::string packageTypeToString( TCPPackageType type );
+    static std::string packageTypeToString( TcpPackageType type);
 
     void clear_aborted();
     static void freeHandle(ClientHandle handle);

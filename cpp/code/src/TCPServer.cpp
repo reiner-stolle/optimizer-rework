@@ -76,7 +76,7 @@ TCPServer::TCPServer(int port) : _port(port) {
         const size_t bufferSize = 1024 * 64 * 4;
         void* buf = malloc(bufferSize);
 
-        info.package_type = TCPPackageType::UpdateUnitType;
+        info.package_type = TcpPackageType::UPDATE_UNIT_TYPE;
         info.payload_size = 0;
 
         // Set TCP_NODELAY and TCP_QUICKACK to avoid stalling of the TCP stack with Nagle's algorithm, as we sent plenty of small messages.
@@ -115,7 +115,7 @@ TCPServer::TCPServer(int port) : _port(port) {
                     exit(-1);
                 }
                 // Only accept the UpdateUnitType response at this time. Drop any client which does not obey the protocol.
-                if (update_info->package_type != TCPPackageType::UpdateUnitType) {
+                if (update_info->package_type != TcpPackageType::UPDATE_UNIT_TYPE) {
                     std::cout << "[UpdateUnitType] Received something else than a UnitUpdate info. Discarding client." << std::endl;
                     freeHandle(handle);
                 }
@@ -140,7 +140,7 @@ TCPServer::TCPServer(int port) : _port(port) {
                         if (collision) {
                             std::cout << "[TCPServer] Found a colliding UUID. Requesting new UUID from client. Was: " << update_info->src_uuid << std::endl;
                             // Collision detected, trigger UUID regeneration.
-                            info.package_type = TCPPackageType::UuidCollision;
+                            info.package_type = TcpPackageType::UUID_COLLISION;
                             info.payload_size = 0;
                             if ((res = send(handle, &info, info.bytesize(), sendFlags)) <= 0) {
                                 std::cout << "[TCPServer] ConnectCallback: Could not send UpdateUnitType to client with handle " << handle << std::endl;
@@ -157,7 +157,7 @@ TCPServer::TCPServer(int port) : _port(port) {
                                 return;
                             }
                             // Receiving another answer than an updated UUID cancels the setup process.
-                            if (update_info->package_type != TCPPackageType::UuidCollision) {
+                            if (update_info->package_type != TcpPackageType::UUID_COLLISION) {
                                 std::cout << "[UpdateUnitType] Error during UUID collision handling. Received wrong response: " << TCPServer::packageTypeToString(update_info->package_type) << " -- Dropping client." << std::endl;
                                 freeHandle(handle);
                                 delete cl_info;
@@ -245,7 +245,7 @@ std::vector<std::pair<std::string, uint64_t>> TCPServer::getUuidForUnitType(Unit
         return {};
     }
     clear_aborted();
-    if (type == UnitType::Undefined) {
+    if (type == UnitType::UNDEFINED_UNIT_TYPE) {
         std::vector<std::pair<std::string, uint64_t>> uuids;
         for (auto it = clientMap.begin(); it != clientMap.end(); ++it) {
             auto cl_info_vec = it->second;
@@ -544,7 +544,7 @@ void TCPServer::closeConnection() {
  * @param type The TCP message type, found in a TCPMetaInfo struct, which triggers a callback.
  * @param cb The callback function for a given TCPPackageType.
  */
-void TCPServer::addCallback(TCPPackageType type, ReceiveCallback cb) {
+void TCPServer::addCallback(TcpPackageType type, ReceiveCallback cb) {
     callbacks[type] = cb;
 }
 
@@ -570,21 +570,21 @@ void TCPServer::setTimeoutToHandle(ClientHandle handle, const size_t sec, const 
  */
 std::string TCPServer::unitTypeToString(UnitType type) {
     switch (type) {
-        case UnitType::Undefined:
+        case UnitType::UNDEFINED_UNIT_TYPE:
             return "Undefined";
-        case UnitType::QueryPlaner:
+        case UnitType::QUERY_PLANER:
             return "QueryPlaner";
-        case UnitType::ComputeUnit:
+        case UnitType::COMPUTE_UNIT:
             return "ComputeUnit";
-        case UnitType::MemoryUnit:
+        case UnitType::MEMORY_UNIT:
             return "MemoryUnit";
-        case UnitType::MetaUnit:
+        case UnitType::META_UNIT:
             return "MetaUnit";
-        case UnitType::MonitorUnit:
+        case UnitType::MONITOR_UNIT:
             return "MonitorUnit";
-        case UnitType::DatabaseUnit:
+        case UnitType::DATABASE_UNIT:
             return "DatabaseUnit";
-        case UnitType::OptimizerUnit:
+        case UnitType::OPTIMIZER_UNIT:
             return "OptimizerUnit";
     }
     return "Unknown unit type";
@@ -596,35 +596,35 @@ std::string TCPServer::unitTypeToString(UnitType type) {
  * @param type The TCPPackageType to covnert.
  * @return std::string String representation of the TCPPackageType type.
  */
-std::string TCPServer::packageTypeToString(TCPPackageType type) {
+std::string TCPServer::packageTypeToString(TcpPackageType type) {
     switch (type) {
-        case TCPPackageType::Undefined:
+        case TcpPackageType::UNDEFINED_PACKAGE_TYPE:
             return "Undefined";
-        case TCPPackageType::Work:
+        case TcpPackageType::WORK:
             return "Work";
-        case TCPPackageType::RerouteWork:
+        case TcpPackageType::REROUTE_WORK:
             return "RerouteWork";
-        case TCPPackageType::TaskFinished:
+        case TcpPackageType::TASK_FINISHED:
             return "TaskFinished";
-        case TCPPackageType::Text:
+        case TcpPackageType::TEXT:
             return "Text";
-        case TCPPackageType::UpdateUnitType:
+        case TcpPackageType::UPDATE_UNIT_TYPE:
             return "UpdateUnitType";
-        case TCPPackageType::QueryPlan:
+        case TcpPackageType::QUERY_PLAN:
             return "QueryPlan";
-        case TCPPackageType::MonitorRequest:
+        case TcpPackageType::MONITOR_REQUEST:
             return "MonitorRequest";
-        case TCPPackageType::ConnectAction:
+        case TcpPackageType::CONNECT_ACTION:
             return "ConnectAction";
-        case TCPPackageType::ConnectActionInfo:
+        case TcpPackageType::CONNECT_ACTION_INFO:
             return "ConnectActionInfo";
-        case TCPPackageType::ConfigurationAction:
+        case TcpPackageType::CONFIGURATION_ACTION:
             return "ConfigurationAction";
-        case TCPPackageType::UuidForUnitRequest:
+        case TcpPackageType::UUID_FOR_UNIT_REQUEST:
             return "UuidForTypeRequest";
-        case TCPPackageType::UuidForUnitResponse:
+        case TcpPackageType::UUID_FOR_UNIT_RESPONSE:
             return "UuidForTypeResponse";
-        case TCPPackageType::UuidCollision:
+        case TcpPackageType::UUID_COLLISION:
             return "UuidCollision";
     }
     return "Unknown package type";

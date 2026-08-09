@@ -1,4 +1,5 @@
 #include <NetworkRequests.pb.h>
+// UnitType is introduced here
 #include <UnitDefinition.pb.h>
 #include <WorkItem.pb.h>
 #include <WorkRequest.pb.h>
@@ -31,11 +32,11 @@ int main(int argc, char** argv) {
         using namespace tuddbs;
         std::cout << "[UpdateUnitInfo Callback] Invoked." << std::endl;
         UnitDefinition unit;
-        unit.set_unit_type(static_cast<uint32_t>(UnitType::ComputeUnit));
+        unit.set_unit_type(static_cast<uint32_t>(UnitType::COMPUTE_UNIT));
         unit.set_prettyname(prettyName);
 
         TCPMetaInfo info;
-        info.package_type = TCPPackageType::UpdateUnitType;
+        info.package_type = TcpPackageType::UPDATE_UNIT_TYPE;
         info.payload_size = unit.ByteSizeLong();
         info.src_uuid = client.getUuid();
         void* out_mem = malloc(sizeof(TCPMetaInfo) + info.payload_size);
@@ -76,7 +77,7 @@ int main(int argc, char** argv) {
         }
 
         tuddbs::TCPMetaInfo info;
-        info.package_type = tuddbs::TCPPackageType::TaskFinished;
+        info.package_type = TcpPackageType::TASK_FINISHED;
         info.payload_size = response.ByteSizeLong();
         info.src_uuid = client.getUuid();
         info.tgt_uuid = meta->src_uuid;
@@ -86,9 +87,9 @@ int main(int argc, char** argv) {
         free(out_mem);
     };
 
-    client.addCallback(tuddbs::TCPPackageType::UpdateUnitType, updateUnitInfo_cb);
-    client.addCallback(tuddbs::TCPPackageType::Work, work_cb);
-    client.addCallback(tuddbs::TCPPackageType::Text, text_cb);
+    client.addCallback(TcpPackageType::UPDATE_UNIT_TYPE, updateUnitInfo_cb);
+    client.addCallback(TcpPackageType::WORK, work_cb);
+    client.addCallback(TcpPackageType::TEXT, text_cb);
 
     client.start();
     client.waitUntilChannelClosed();

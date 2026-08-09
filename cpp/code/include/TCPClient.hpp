@@ -29,7 +29,7 @@ class TCPClient {
     std::condition_variable channel_cv;
     std::mutex channel_mutex;
 
-    std::map<TCPPackageType, ReceiveCallback> callbacks;
+    std::map<TcpPackageType, ReceiveCallback> callbacks;
     void listenLoop();
     bool globalAbort = false;
     ServerHandle serverHandle;
@@ -45,7 +45,7 @@ class TCPClient {
     bool isConnected() const;
     
     uint64_t getUuid() const;
-    void addCallback(TCPPackageType type, ReceiveCallback cb);
+    void addCallback(TcpPackageType type, ReceiveCallback cb);
     void notifyHost(void* data, size_t len);
     void textResponse(std::string text, uint64_t tgt_uuid = 0);
 

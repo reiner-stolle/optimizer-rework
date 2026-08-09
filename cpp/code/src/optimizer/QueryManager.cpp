@@ -4,6 +4,7 @@
 #include "Utility.hpp"
 #include "WorkRequest.pb.h"
 #include "optimizer/Logger.hpp"
+#include "UnitDefinition.pb.h"
 
 size_t now() {
     return std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -163,7 +164,7 @@ void QueryManager::sendQueryPlan(const std::shared_ptr<PhysicalPlanNode>& physic
     WorkRequest workRequest;
     workRequest.mutable_queryplan()->CopyFrom(createQueryPlan(physical_plan));
     tuddbs::TCPMetaInfo info;
-    info.package_type = tuddbs::TCPPackageType::Work;
+    info.package_type = TcpPackageType::WORK;
     info.payload_size = workRequest.ByteSizeLong();
     info.src_uuid = client->getUuid();
     void *out_mem = malloc(sizeof(tuddbs::TCPMetaInfo) + info.payload_size);
@@ -190,7 +191,7 @@ void QueryManager::sendQueryPlanParallel(const std::shared_ptr<PhysicalPlanNode>
                 workRequest.mutable_workitem()->CopyFrom(item);
 
                 tuddbs::TCPMetaInfo info;
-                info.package_type = tuddbs::TCPPackageType::Work;
+                info.package_type = TcpPackageType::WORK;
                 info.payload_size = workRequest.ByteSizeLong();
                 info.src_uuid = client->getUuid();
                 
